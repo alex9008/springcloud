@@ -8,7 +8,6 @@ import java.util.Random;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.alexgarcia.springcloud.msvc.items.models.Item;
 import com.alexgarcia.springcloud.msvc.items.models.Product;
@@ -36,7 +35,7 @@ public class ItemSerciceWebClient implements ItemService {
     @Override
     public Optional<Item> findById(Long id) {
         Map<String, Object> params = Map.of("id", id);
-        try {
+        //try {
             return Optional.of(this.webClientBuilder.build()
                     .get()
                     .uri("/{id}", params)
@@ -45,9 +44,9 @@ public class ItemSerciceWebClient implements ItemService {
                     .bodyToMono(Product.class)
                     .map(item -> new Item(item, new Random().nextInt(10) + 1))
                     .block());
-        } catch (WebClientResponseException e) {
-            return Optional.empty();
-        }
+       // } catch (WebClientResponseException e) {
+       //     return Optional.empty();
+       // }
 
     }
 

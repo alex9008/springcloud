@@ -1,3 +1,26 @@
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 6
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 4
+        slowCallDurationThreshold: 3s
+        slowCallRateThreshold: 50
+    instances:
+      products:
+        baseConfig: default
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 3s
+    instances:
+      products:
+        baseConfig: default
+
+
+
 spring:
   cloud:
     gateway:
@@ -6,7 +29,16 @@ spring:
         uri: lb://msvc-products
         predicates:
         - Path=/api/products/**
+        #- Header=X-Request-Id, \d+
+        #- Method=GET, POST
+        #- Query=name, \d+
+        #- Cookie=JSESSIONID, \d+
         filters:
+        - name: CircuitBreaker
+          args:
+            name: products
+            statusCodes: 500
+            fallbackUri: forward:/api/items/5
         - StripPrefix=2
         - name: SampleCookie
           args:
@@ -18,4 +50,8 @@ spring:
         predicates:
         - Path=/api/items/**
         filters:
-        - StripPrefix=2  
+        - StripPrefix=2
+        - AddRequestHeader=X-Request-Foo, Bar
+        - AddResponseHeader=X-Response-Foo, Bar
+        - AddRequestParameter=name, Alex
+        - SetResponseHeader=Content-Type, text/plain

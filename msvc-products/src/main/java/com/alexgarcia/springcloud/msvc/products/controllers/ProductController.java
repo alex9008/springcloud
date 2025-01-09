@@ -6,14 +6,13 @@ import com.alexgarcia.springcloud.msvc.products.entities.Product;
 import com.alexgarcia.springcloud.msvc.products.services.ProductService;
 import com.alexgarcia.springcloud.msvc.products.services.ProductServiceImpl;
 
-
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 
 @RestController
 public class ProductController {
@@ -30,8 +29,16 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) throws InterruptedException {
+
+        if (id.equals(10L)) {
+            throw new IllegalStateException("Product not found");
+        }
+
+        if (id.equals(7L)) {
+            TimeUnit.SECONDS.sleep(3);
+        }
+
         Optional<Product> product = productService.findById(id);
 
         if (product.isPresent()) {
@@ -40,9 +47,5 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-
-
-
 
 }
