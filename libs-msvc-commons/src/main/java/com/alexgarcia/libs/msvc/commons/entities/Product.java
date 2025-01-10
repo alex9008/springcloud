@@ -1,4 +1,4 @@
-package com.alexgarcia.springcloud.msvc.products.entities;
+package com.alexgarcia.libs.msvc.commons.entities;
 
 import java.time.LocalDate;
 

@@ -19,6 +19,10 @@
 		},
 		{
 			"path": "../../../../config-repo"
+		},
+		{
+			"name": "libs-msvc-commons",
+			"path": "../../../../libs-msvc-commons"
 		}
 	],
 	"settings": {

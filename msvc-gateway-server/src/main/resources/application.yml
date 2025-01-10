@@ -54,4 +54,4 @@ spring:
         - AddRequestHeader=X-Request-Foo, Bar
         - AddResponseHeader=X-Response-Foo, Bar
         - AddRequestParameter=name, Alex
-        - SetResponseHeader=Content-Type, text/plain
+        - SetResponseHeader=Content-Type, application/json

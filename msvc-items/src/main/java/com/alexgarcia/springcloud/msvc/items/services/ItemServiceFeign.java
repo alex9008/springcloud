@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.alexgarcia.libs.msvc.commons.entities.Product;
 import com.alexgarcia.springcloud.msvc.items.clients.ProductFeignClient;
 import com.alexgarcia.springcloud.msvc.items.models.Item;
-import com.alexgarcia.springcloud.msvc.items.models.Product;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +38,22 @@ public class ItemServiceFeign implements ItemService {
         } catch (FeignException e) {
             return Optional.empty();
         }
+
+    }
+
+    @Override
+    public Product save(Product product) {
+        return productClient.save(product);
+    }
+
+    @Override
+    public Product update(Product product, Long id) {
+        return productClient.update(product, id);
+    }
+
+    @Override
+    public void delete(Long id) {
+        productClient.delete(id);
 
     }
 

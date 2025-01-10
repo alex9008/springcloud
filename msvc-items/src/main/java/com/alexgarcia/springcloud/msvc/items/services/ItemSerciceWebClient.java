@@ -9,8 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.alexgarcia.libs.msvc.commons.entities.Product;
 import com.alexgarcia.springcloud.msvc.items.models.Item;
-import com.alexgarcia.springcloud.msvc.items.models.Product;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +48,47 @@ public class ItemSerciceWebClient implements ItemService {
        //     return Optional.empty();
        // }
 
+    }
+
+    @Override
+    public Product save(Product product) {
+
+        return this.webClientBuilder.build()
+                .post()
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(product)
+                .retrieve()
+                .bodyToMono(Product.class)
+                .block();
+        
+    }
+
+    @Override
+    public Product update(Product product, Long id) {
+
+        return this.webClientBuilder.build()
+                .put()
+                .uri("/{id}", Map.of("id", id))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(product)
+                .retrieve()
+                .bodyToMono(Product.class)
+                .block();
+        
+    }
+
+    @Override
+    public void delete(Long id) {
+
+        this.webClientBuilder.build()
+                .delete()
+                .uri("/{id}", Map.of("id", id))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+       
     }
 
 }

@@ -1,5 +1,7 @@
 package com.alexgarcia.springcloud.msvc.items.models;
 
+import com.alexgarcia.libs.msvc.commons.entities.Product;
+
 public class Item {
 
     private Product product;
