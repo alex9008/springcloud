@@ -27,6 +27,10 @@
 		{
 			"name": "msvc-users",
 			"path": "../../../../msvc-users"
+		},
+		{
+			"name": "mscv-oauth",
+			"path": "../../../../mscv-oauth"
 		}
 	],
 	"settings": {

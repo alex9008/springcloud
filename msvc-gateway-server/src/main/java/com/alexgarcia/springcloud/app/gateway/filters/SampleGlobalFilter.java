@@ -1,5 +1,8 @@
 package com.alexgarcia.springcloud.app.gateway.filters;
 
+
+import org.springframework.core.Ordered;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -18,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class SampleGlobalFilter implements GlobalFilter, Ordered {
+
 
     private static final Logger log = LoggerFactory.getLogger(SampleGlobalFilter.class);
 

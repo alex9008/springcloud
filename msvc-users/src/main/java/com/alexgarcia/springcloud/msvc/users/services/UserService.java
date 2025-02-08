@@ -13,11 +13,12 @@ import com.alexgarcia.springcloud.msvc.users.entities.User;
 import com.alexgarcia.springcloud.msvc.users.repositories.RoleRepository;
 import com.alexgarcia.springcloud.msvc.users.repositories.UsersRepository;
 
+
 @Component
 public class UserService implements IUserService {
 
-    private UsersRepository usersRepository;
-    private RoleRepository roleRepository;
+    private final UsersRepository usersRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UsersRepository usersRepository, RoleRepository roleRepository,
