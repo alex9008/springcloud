@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 public class ProductController {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
     private final ProductService productService;
 
     public ProductController(ProductServiceImpl productService) {
@@ -30,11 +34,13 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> list() {
+        log.info("Listing all products");
         return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) throws InterruptedException {
+        log.info("Getting product by id: {}", id);
 
         if (id.equals(10L)) {
             throw new IllegalStateException("Product not found");
@@ -55,12 +61,14 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> create(@RequestBody Product product) {
-
+        log.info("Creating product: {}", product);
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        log.info("Deleting product: {}", id);
 
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
@@ -75,13 +83,15 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
 
+        log.info("Updating product: {}", product);
+
         Optional<Product> productOptional = productService.findById(id);
         if (productOptional.isPresent()) {
             Product productDb = productOptional.get();
             productDb.setName(product.getName());
             productDb.setPrice(product.getPrice());
             return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productDb));
-            
+
         }
 
         return ResponseEntity.notFound().build();

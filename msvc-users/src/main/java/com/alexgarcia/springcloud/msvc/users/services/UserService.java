@@ -14,6 +14,7 @@ import com.alexgarcia.springcloud.msvc.users.repositories.RoleRepository;
 import com.alexgarcia.springcloud.msvc.users.repositories.UsersRepository;
 
 
+
 @Component
 public class UserService implements IUserService {
 

@@ -24,10 +24,11 @@ public class SampleGlobalFilter implements GlobalFilter, Ordered {
 
     private static final Logger log = LoggerFactory.getLogger(SampleGlobalFilter.class);
 
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        log.info("Executing pre Global Filter");
+        log.info("Executing pre Global Filter 1");
 
         // Mutate the request and set it back into the exchange
         ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
@@ -48,6 +49,7 @@ public class SampleGlobalFilter implements GlobalFilter, Ordered {
             mutatedExchange.getResponse().getCookies().add("color", ResponseCookie.from("color", "red").build());
             // modify response content type
             mutatedExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
         }));
     }
 

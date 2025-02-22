@@ -18,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemSerciceWebClient implements ItemService {
 
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient webClientBuilder;
 
     @Override
     public List<Item> findAll() {
-        return this.webClientBuilder.build()
+        return this.webClientBuilder
                 .get()
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -35,25 +35,25 @@ public class ItemSerciceWebClient implements ItemService {
     @Override
     public Optional<Item> findById(Long id) {
         Map<String, Object> params = Map.of("id", id);
-        //try {
-            return Optional.of(this.webClientBuilder.build()
-                    .get()
-                    .uri("/{id}", params)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(Product.class)
-                    .map(item -> new Item(item, new Random().nextInt(10) + 1))
-                    .block());
-       // } catch (WebClientResponseException e) {
-       //     return Optional.empty();
-       // }
+        // try {
+        return Optional.of(this.webClientBuilder
+                .get()
+                .uri("/{id}", params)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Product.class)
+                .map(item -> new Item(item, new Random().nextInt(10) + 1))
+                .block());
+        // } catch (WebClientResponseException e) {
+        // return Optional.empty();
+        // }
 
     }
 
     @Override
     public Product save(Product product) {
 
-        return this.webClientBuilder.build()
+        return this.webClientBuilder
                 .post()
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,13 +61,13 @@ public class ItemSerciceWebClient implements ItemService {
                 .retrieve()
                 .bodyToMono(Product.class)
                 .block();
-        
+
     }
 
     @Override
     public Product update(Product product, Long id) {
 
-        return this.webClientBuilder.build()
+        return this.webClientBuilder
                 .put()
                 .uri("/{id}", Map.of("id", id))
                 .accept(MediaType.APPLICATION_JSON)
@@ -76,19 +76,19 @@ public class ItemSerciceWebClient implements ItemService {
                 .retrieve()
                 .bodyToMono(Product.class)
                 .block();
-        
+
     }
 
     @Override
     public void delete(Long id) {
 
-        this.webClientBuilder.build()
+        this.webClientBuilder
                 .delete()
                 .uri("/{id}", Map.of("id", id))
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
-       
+
     }
 
 }

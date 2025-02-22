@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -31,12 +33,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
 @RestController
 @RefreshScope
 public class ItemController {
 
+    private static final Logger log = LoggerFactory.getLogger(ItemController.class);
+
     private final ItemService itemService;
+    @SuppressWarnings("rawtypes")
     private final CircuitBreakerFactory circuitBreakerFactory;
     private final Environment env;
 
@@ -52,6 +56,7 @@ public class ItemController {
     @Value("${configurations.autor.email}")
     private String autorEmail;
 
+    @SuppressWarnings("rawtypes")
     public ItemController(@Qualifier("itemServiceFeign") ItemService itemService,
             CircuitBreakerFactory circuitBreakerFactory, Environment env) {
         this.itemService = itemService;
@@ -66,27 +71,29 @@ public class ItemController {
                 autorEmail);
         if (env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equals("dev")) {
             return ResponseEntity.ok(configs);
-            
+
         }
 
         return ResponseEntity.ok(configs);
     }
-    
 
     @GetMapping
     public List<Item> list(@RequestParam(name = "name", required = false) String name,
             @RequestHeader(name = "X-Request-Foo", required = false) String token) {
-        System.out.println("name = " + name);
-        System.out.println("token = " + token);
+        log.info("Call Item Service");
+        log.info("Request Parameter: {}", name);
+        log.info("Request Header: {}", token);
         return itemService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detail(@PathVariable Long id) {
 
+        log.info("Getting item by id: {}", id);
+
         Optional<Item> item = circuitBreakerFactory.create("itemss").run(() -> itemService.findById(id),
                 throwable -> {
-                    System.out.println("throwable = " + throwable);
+                    log.error("Error: {}", throwable.getMessage());
                     return Optional.empty();
                 });
 
@@ -159,19 +166,21 @@ public class ItemController {
 
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody Product product) {
+        log.info("Creating product - Request Body: {}", product);
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.save(product));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody Product product, @PathVariable Long id) {
+        log.info("Updating product - Request Body: {}", product);
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.update(product, id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
+        log.info("Deleting product - Request Parameter: {}", id);
         itemService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    
 
 }
